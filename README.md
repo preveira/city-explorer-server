@@ -7,7 +7,7 @@
 Creating a Weather search application.
 
 ![Request-Response Cycle](img/Lab-07-request-response-cycle.png)
-![Functions Overview](img/lab-07 functions overview.png)
+![Functions Overview](img/lab-07%20functions%20overview.png)
 
 ## Getting Started
 <!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
