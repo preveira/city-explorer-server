@@ -4,6 +4,13 @@ const express = require('express');
 const cors = require('cors');
 const weatherData = require('./weather.json');
 const app = express();
+const dotenv = require('dotenv');
+
+
+dotenv.config(); //loads our environment variables from our .env file
+
+const PORT = process.env.PORT || 3000;
+//server side we read environment variables using the process.emv object
 
 class Forecast {
   constructor(date, description) {
@@ -17,27 +24,25 @@ app.use(express.json());
 
 
 
-app.get('/weather', (request, response) => {
-  const { lat, lon, searchQuery } = request.query;
-
+app.get('/weather/:lat_lon', (request, response) => {
+  const lat = request.params.lat_lon.split('_')[0];
+  const lon = request.params.lat_lon.split('_')[1];
+  console.log(lat, lon);
   // Find the city based on lat, lon, or searchQuery
-  let cityWeather;
-  if (searchQuery) {
-    cityWeather = weatherData.find(city => city.city_name.toLowerCase() === searchQuery.toLowerCase());
-  } else if (lat && lon) {
-    cityWeather = weatherData.find(city => city.lat === lat && city.lon === lon);
-  }
+  console.log(weatherData);
+  let weatherDex = weatherData.find(city => city.lat === lat && city.lon === lon);
+
 
   // If city not found, return an error
-  if (!cityWeather) {
+  if (!weatherDex) {
     return response.status(404).json({ error: 'City not found' });
   }
 
   // Process weather data for the city
-  const forecasts = cityWeather.data.map(day => new Forecast(day.datetime, day.weather.description));
+  const forecasts = weatherDex.data.map(day => new Forecast(day.datetime, day.weather.description));
 
   // Send the processed data back to the client
-  response.json(forecasts);
+  response.send(forecasts);
 });
 
 app.listen(3000, () => {
