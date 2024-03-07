@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 
 dotenv.config(); //loads our environment variables from our .env file
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 //server side we read environment variables using the process.env object
 
@@ -28,14 +28,14 @@ const getWeather = async (lat, lon) => {
   console.log('HELLO!');
   let weatherResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${WEATHER_API_KEY}`);
   console.log(weatherResponse.data);
-  weatherResponse.data.data.map(day => {
+  return weatherResponse.data.data.map(day => {
     return new Forecast (day.datetime, day.weather.description);
   });
 }; 
 
 const getMovies = async (city) => {
   let movieResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?query=${city}&api_key=dcb6acb50e45e4d4dfc8ed9f119c8abd`);
-  return movieResponse;
+  return movieResponse.data;
 };
 
 
